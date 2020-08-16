@@ -66,6 +66,7 @@ obj
 bin
 *.exe
 **/.ioniode/**
+.ioniode/sybolCache.db
 
 
 ### Node ###
