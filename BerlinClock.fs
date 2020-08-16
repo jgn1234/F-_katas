@@ -1,3 +1,4 @@
+// module BerlinClock
 
 type Hour = int
 type Minute = int
@@ -55,13 +56,16 @@ let rowLights list action =
   let foldAction lightTracker elem = lightTracker + action elem
   list |> List.fold foldAction ""
 
+let extractTimeValue inputTime timeValue = 
+    match timeValue with
+    | Second -> inputTime.Second
+    | Minute -> inputTime.Minute
+    | Hour ->   inputTime.Hour
+
 let rowResults inputTime = 
-  let action (elem: RowGenerator) = 
-    match elem.TimeValue with
-    | Second -> inputTime.Second |> elem.RowAction |> rowLights elem.RowList
-    | Minute -> inputTime.Minute |> elem.RowAction |> rowLights elem.RowList
-    | Hour ->   inputTime.Hour   |> elem.RowAction |> rowLights elem.RowList
-  rows |> List.map action
+  let mapAction (elem: RowGenerator) = 
+    elem.TimeValue |> extractTimeValue inputTime |> elem.RowAction |> rowLights elem.RowList
+  rows |> List.map mapAction
 
 let arrayToTime (timeArray: string[]) = {
   Hour = int timeArray.[0]; 
