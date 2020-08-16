@@ -49,7 +49,8 @@ let rows = [
   {
     RowList = [1;2;3;4]; 
     RowAction = modulo 5 >> onOrOff "Y" "O"; 
-    TimeValue = Minute};
+    TimeValue = Minute
+  };
 ]
 
 let rowLights list action = 
