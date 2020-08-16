@@ -63,9 +63,15 @@ let rowResults inputTime =
     | Hour ->   inputTime.Hour   |> elem.RowAction |> rowLights elem.RowList
   rows |> List.map action
 
-let timeString = "21:57:21"
-let toTime (timeArray: string[]) = {Hour = int timeArray.[0]; Minute = int timeArray.[1]; Second = int timeArray.[2]}
-let timeParse (timeStr: string) = timeStr.Split ':'
-let inputTime = timeString |> timeParse |> toTime
+let arrayToTime (timeArray: string[]) = {
+  Hour = int timeArray.[0]; 
+  Minute = int timeArray.[1]; 
+  Second = int timeArray.[2]
+  }
+let timeStringToArray (timeStr: string) = timeStr.Split ':'
+let timeStringToTime = timeStringToArray >> arrayToTime
 
-let allRows = rowResults inputTime
+let allRows inputTime = inputTime |> timeStringToTime |> rowResults
+
+let timeString = "21:57:21"
+let result = timeString |> allRows
