@@ -25,7 +25,6 @@ let onOrOff trueValue falseValue measure elem =
   | true -> trueValue 
   | false -> falseValue
 
-
 let clockRows = [
   {
     RowList = [1]; 
@@ -64,7 +63,7 @@ let extractTimeValue inputTime timeValue =
     | Minute -> inputTime.Minute
     | Hour ->   inputTime.Hour
 
-let rowResults inputTime = 
+let generateClockRows inputTime = 
   let mapAction (elem: ClockRowGenerator) = 
     elem.RowTimeType |> extractTimeValue inputTime |> elem.RowAction |> rowLights elem.RowList
   clockRows |> List.map mapAction
@@ -78,7 +77,7 @@ let arrayToTime (timeArray: string[]) = {
 let timeStringToArray (timeStr: string) = timeStr.Split ':'
 let timeStringToTime = timeStringToArray >> arrayToTime
 
-let allRows inputTime = inputTime |> timeStringToTime |> rowResults
+let allRows inputTime = inputTime |> timeStringToTime |> generateClockRows
 
 let timeString = "21:57:21"
 let result = timeString |> allRows
