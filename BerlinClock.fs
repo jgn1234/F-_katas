@@ -73,6 +73,7 @@ let arrayToTime (timeArray: string[]) = {
   Minute = int timeArray.[1]; 
   Second = int timeArray.[2]
   }
+  
 let timeStringToArray (timeStr: string) = timeStr.Split ':'
 let timeStringToTime = timeStringToArray >> arrayToTime
 
