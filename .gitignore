@@ -65,6 +65,7 @@ Debug
 obj
 bin
 *.exe
+.ioniode/*
 
 
 ### Node ###
