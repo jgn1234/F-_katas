@@ -13,7 +13,7 @@ type Time = {
 }
 
 type ClockRowGenerator = {
-  RowList: int List
+  RowFields: int List   
   RowAction: int -> int -> string
   RowTimeType: TimeValue
 }
@@ -25,29 +25,33 @@ let onOrOff trueValue falseValue measure elem =
   | true -> trueValue 
   | false -> falseValue
 
+// each element of the clockRows list represents one row on the clock
+// the RowFields list represents the fields on a given row of the clock
+// the RowAction defines the action that should be taken to generate each field on the row
+// the RowTimeType defines the part of the 24-hour time that is used to calculate the fields on the row
 let clockRows = [
   {
-    RowList = [1]; 
+    RowFields = [1]; 
     RowAction = modulo 2 >> onOrOff "O" "Y"; 
     RowTimeType = Second
   };
   {
-    RowList = [5;10;15;20]; 
+    RowFields = [5;10;15;20]; 
     RowAction = onOrOff "R" "O"; 
     RowTimeType = Hour
   };
   {
-    RowList = [1;2;3;4]; 
+    RowFields = [1;2;3;4]; 
     RowAction = modulo 5 >> onOrOff "R" "O"; 
     RowTimeType = Hour
   };
   {
-    RowList = [5;10;15;20;25;30;35;40;45;50;55]; 
+    RowFields = [5;10;15;20;25;30;35;40;45;50;55]; 
     RowAction = onOrOff "Y" "O"; 
     RowTimeType = Minute
   };
   {
-    RowList = [1;2;3;4]; 
+    RowFields = [1;2;3;4]; 
     RowAction = modulo 5 >> onOrOff "Y" "O"; 
     RowTimeType = Minute
   };
@@ -65,7 +69,7 @@ let extractTimeValue inputTime timeValue =
 
 let generateClockRows inputTime = 
   let mapAction (elem: ClockRowGenerator) = 
-    elem.RowTimeType |> extractTimeValue inputTime |> elem.RowAction |> rowLights elem.RowList
+    elem.RowTimeType |> extractTimeValue inputTime |> elem.RowAction |> rowLights elem.RowFields
   clockRows |> List.map mapAction
 
 let arrayToTime (timeArray: string[]) = {
