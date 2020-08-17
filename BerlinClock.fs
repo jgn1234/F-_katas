@@ -86,7 +86,7 @@ let arrayToTime (timeArray: string[]) = {
 let timeStringToArray (timeStr: string) = timeStr.Split ':'
 let timeStringToTime = timeStringToArray >> arrayToTime
 
-let allRows inputTime = inputTime |> timeStringToTime |> generateClockRows
+let generateAllClockRows = timeStringToTime >> generateClockRows
 
 let timeString = "21:57:21"
-let result = timeString |> allRows
+let result = timeString |> generateAllClockRows
