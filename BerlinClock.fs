@@ -12,6 +12,12 @@ type Time = {
   Second: Second
 }
 
+// RowFields is a list that represents the fields on a given row of the clock
+// RowAction is a function that defines the action that should be taken to generate each field on the row
+// RowTimeType defines the part of the 24-hour time that is used to calculate the fields on the row
+//    using the first row as an example: the seconds of the current time are passed to modulo 2, 
+//    the result of which is passed to the onOrOff calcuation and compared against the RowField list element for the current field.  
+//    This result is used to determine whether the first or second value is returned to represent the field color
 type ClockRowGenerator = {
   RowFields: int List   
   RowAction: int -> int -> string
@@ -26,12 +32,6 @@ let onOrOff trueValue falseValue measure elem =
   | false -> falseValue
 
 // each element of the clockRows list represents one row on the clock
-// the RowFields list represents the fields on a given row of the clock
-// the RowAction defines the action that should be taken to generate each field on the row
-// the RowTimeType defines the part of the 24-hour time that is used to calculate the fields on the row
-//    using the first row as an example: the seconds of the current time are passed to modulo 2, 
-//    the result of which is passed to the onOrOff calcuation and compared against the RowField list element for the current field.  
-//    This result is used to determine whether the first or second value is returned to represent the field color
 // This data structure can easily be extended to add new rows with unique attributes to represent time
 // (e.g., another row where each field represents 10 seconds)
 let clockRows = [
@@ -63,8 +63,7 @@ let clockRows = [
 ]
 
 let rowLights list action = 
-  let foldAction lightTracker elem = lightTracker + action elem
-  list |> List.fold foldAction ""
+  list |> List.fold (fun lightTracker elem -> lightTracker + action elem) ""
 
 let extractTimeValue inputTime timeValue = 
     match timeValue with
@@ -73,9 +72,8 @@ let extractTimeValue inputTime timeValue =
     | Hour ->   inputTime.Hour
 
 let generateClockRows inputTime = 
-  let mapAction (elem: ClockRowGenerator) = 
-    elem.RowTimeType |> extractTimeValue inputTime |> elem.RowAction |> rowLights elem.RowFields
-  clockRows |> List.map mapAction
+  clockRows |> List.map 
+    (fun e -> e.RowTimeType |> extractTimeValue inputTime |> e.RowAction |> rowLights e.RowFields)
 
 let arrayToTime (timeArray: string[]) = {
   Hour = int timeArray.[0]; 
